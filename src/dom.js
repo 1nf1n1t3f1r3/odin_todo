@@ -20,6 +20,7 @@ const projectTitleEl = document.getElementById("project-title");
 // Todo Form
 const form = document.getElementById("todo-form");
 const titleInput = document.getElementById("todo-title");
+const descriptionInput = document.getElementById("todo-description");
 const dateInput = document.getElementById("todo-dueDate");
 const priorityInput = document.getElementById("todo-priority");
 
@@ -37,10 +38,11 @@ function handleSubmitTodo(e) {
   e.preventDefault();
 
   const title = titleInput.value;
+  const description = descriptionInput.value;
   const dueDate = dateInput.value;
   const priority = priorityInput.value;
 
-  const todo = new Todo(title, "", dueDate, priority);
+  const todo = new Todo(title, description, dueDate, priority);
 
   addTodoToCurrentProject(todo);
   renderApp();
@@ -85,7 +87,7 @@ function createTodoElement(todo) {
   const li = document.createElement("li");
 
   const text = document.createElement("span");
-  text.textContent = `${todo.title} (${todo.dueDate})`;
+  text.textContent = `${todo.title} - ${todo.description} (${todo.dueDate})`;
 
   if (todo.completed) {
     text.style.textDecoration = "line-through";
