@@ -30,14 +30,18 @@ export function setCurrentProject(project) {
   currentProject = project;
 }
 
+//
+// These
+//
+
 // Todos
 export function toggleTodo(todoId) {
-  const todo = currentProject.getTodo(todoId);
-  if (todo) {
-    todo.toggleComplete();
-  }
+  currentProject.toggleTodo(todoId);
 }
 
 export function addTodoToCurrentProject(todo) {
   currentProject.addTodo(todo);
+}
+export function deleteTodoFromCurrentProject(todoId) {
+  currentProject.removeTodo(todoId);
 }

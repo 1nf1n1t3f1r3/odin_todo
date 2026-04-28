@@ -9,6 +9,7 @@ import {
   toggleTodo,
   addTodoToCurrentProject,
   addProject,
+  deleteTodoFromCurrentProject,
 } from "./state.js";
 
 // Grab Elements
@@ -83,16 +84,28 @@ export function renderProjects() {
 function createTodoElement(todo) {
   const li = document.createElement("li");
 
-  li.textContent = `${todo.title} (${todo.dueDate})`;
+  const text = document.createElement("span");
+  text.textContent = `${todo.title} (${todo.dueDate})`;
 
   if (todo.completed) {
-    li.style.textDecoration = "line-through";
+    text.style.textDecoration = "line-through";
   }
 
-  li.addEventListener("click", () => {
+  text.addEventListener("click", () => {
     toggleTodo(todo.id);
     renderApp();
   });
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "❌";
+
+  deleteBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // IMPORTANT (explained below)
+    deleteTodoFromCurrentProject(todo.id);
+    renderApp();
+  });
+
+  li.append(text, deleteBtn);
 
   return li;
 }

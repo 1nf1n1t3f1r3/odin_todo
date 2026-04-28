@@ -18,4 +18,8 @@ export default class Project {
   getTodo(todoId) {
     return this.todos.find((todo) => todo.id === todoId);
   }
+
+  toggleTodo(todoId) {
+    this.getTodo(todoId)?.toggleComplete();
+  }
 }
