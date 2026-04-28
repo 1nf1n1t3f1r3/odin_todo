@@ -29,6 +29,9 @@ const addProjectBtn = document.getElementById("add-project-btn");
 
 addProjectBtn.addEventListener("click", handleAddProject);
 
+// ???
+const expandedTodos = new Set();
+
 // Submit
 export function initEventListeners() {
   form.addEventListener("submit", handleSubmitTodo);
@@ -86,28 +89,51 @@ export function renderProjects() {
 function createTodoElement(todo) {
   const li = document.createElement("li");
 
-  const text = document.createElement("span");
-  text.textContent = `${todo.title} - ${todo.description} (${todo.dueDate})`;
+  const isExpanded = expandedTodos.has(todo.id);
 
-  if (todo.completed) {
-    text.style.textDecoration = "line-through";
-  }
+  const header = document.createElement("div");
+  header.style.display = "flex";
+  header.style.gap = "10px";
+  header.style.cursor = "pointer";
 
-  text.addEventListener("click", () => {
-    toggleTodo(todo.id);
+  const title = document.createElement("strong");
+  title.textContent = todo.title;
+
+  const meta = document.createElement("span");
+  meta.textContent = `${todo.dueDate} | ${todo.priority}`;
+
+  header.append(title, meta);
+
+  // EXPAND / COLLAPSE
+  header.addEventListener("click", () => {
+    if (expandedTodos.has(todo.id)) {
+      expandedTodos.delete(todo.id);
+    } else {
+      expandedTodos.add(todo.id);
+    }
     renderApp();
   });
+
+  li.appendChild(header);
+
+  // expanded section
+  if (isExpanded) {
+    const desc = document.createElement("p");
+    desc.textContent = todo.description;
+    li.appendChild(desc);
+  }
 
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "❌";
 
   deleteBtn.addEventListener("click", (e) => {
-    e.stopPropagation(); // IMPORTANT (explained below)
+    e.stopPropagation();
     deleteTodoFromCurrentProject(todo.id);
+    expandedTodos.delete(todo.id); // cleanup
     renderApp();
   });
 
-  li.append(text, deleteBtn);
+  li.appendChild(deleteBtn);
 
   return li;
 }
