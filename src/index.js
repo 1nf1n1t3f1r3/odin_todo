@@ -1,6 +1,7 @@
 /// src.index.js
 
 import "./styles.css";
-import { renderApp } from "./dom.js";
+import { renderApp, initEventListeners } from "./dom.js";
 
+initEventListeners();
 renderApp();

@@ -8,6 +8,7 @@ import {
   setCurrentProject,
   toggleTodo,
   addTodoToCurrentProject,
+  addProject,
 } from "./state.js";
 
 // Grab Elements
@@ -15,14 +16,23 @@ const projectListEl = document.getElementById("project-list");
 const todoListEl = document.getElementById("todo-list");
 const projectTitleEl = document.getElementById("project-title");
 
-// Form
+// Todo Form
 const form = document.getElementById("todo-form");
 const titleInput = document.getElementById("todo-title");
 const dateInput = document.getElementById("todo-dueDate");
 const priorityInput = document.getElementById("todo-priority");
 
+// Add Project
+const addProjectBtn = document.getElementById("add-project-btn");
+
+addProjectBtn.addEventListener("click", handleAddProject);
+
 // Submit
-form.addEventListener("submit", (e) => {
+export function initEventListeners() {
+  form.addEventListener("submit", handleSubmitTodo);
+}
+
+function handleSubmitTodo(e) {
   e.preventDefault();
 
   const title = titleInput.value;
@@ -32,22 +42,33 @@ form.addEventListener("submit", (e) => {
   const todo = new Todo(title, "", dueDate, priority);
 
   addTodoToCurrentProject(todo);
-
-  renderTodos();
-
+  renderApp();
   form.reset();
-});
+}
 
 function createProjectElement(project) {
   const li = document.createElement("li");
   li.textContent = project.name;
 
+  if (project.id === getCurrentProject().id) {
+    li.style.fontWeight = "bold";
+  }
+
   li.addEventListener("click", () => {
     setCurrentProject(project);
-    renderTodos();
+    renderApp();
   });
 
   return li;
+}
+
+function handleAddProject() {
+  const name = prompt("Project name?");
+  if (!name) return;
+
+  const project = addProject(name);
+  setCurrentProject(project);
+  renderApp();
 }
 
 export function renderProjects() {
@@ -70,7 +91,7 @@ function createTodoElement(todo) {
 
   li.addEventListener("click", () => {
     toggleTodo(todo.id);
-    renderTodos();
+    renderApp();
   });
 
   return li;
