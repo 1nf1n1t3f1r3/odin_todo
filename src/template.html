@@ -19,5 +19,19 @@
         <ul id="todo-list"></ul>
       </main>
     </div>
+    <div>
+      <form id="todo-form">
+        <input type="text" id="todo-title" placeholder="Title" required />
+        <input type="date" id="todo-dueDate" required />
+
+        <select id="todo-priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <button type="submit">Add Todo</button>
+      </form>
+    </div>
   </body>
 </html>

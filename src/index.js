@@ -1,5 +1,6 @@
-import "./styles.css";
-import { renderProjects, renderTodos } from "./dom.js";
+/// src.index.js
 
-renderProjects();
-renderTodos();
+import "./styles.css";
+import { renderApp } from "./dom.js";
+
+renderApp();

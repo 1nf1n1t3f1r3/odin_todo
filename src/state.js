@@ -1,3 +1,5 @@
+//src/state.js
+
 import Project from "./classes/project.js";
 
 const defaultProject = new Project("Default");
@@ -23,4 +25,9 @@ export function toggleTodo(todoId) {
   if (todo) {
     todo.toggleComplete();
   }
+}
+
+// state.js
+export function addTodoToCurrentProject(todo) {
+  currentProject.addTodo(todo);
 }
