@@ -91,20 +91,23 @@ function createTodoElement(todo) {
 
   const isExpanded = expandedTodos.has(todo.id);
 
+  // =========================
+  // HEADER (always visible)
+  // =========================
   const header = document.createElement("div");
-  header.style.display = "flex";
-  header.style.gap = "10px";
   header.style.cursor = "pointer";
+  header.style.display = "flex";
+  header.style.gap = "8px";
+  header.style.alignItems = "center";
 
   const title = document.createElement("strong");
   title.textContent = todo.title;
 
   const meta = document.createElement("span");
-  meta.textContent = `${todo.dueDate} | ${todo.priority}`;
+  meta.textContent = `| ${todo.dueDate} | ${todo.priority}`;
 
   header.append(title, meta);
 
-  // EXPAND / COLLAPSE
   header.addEventListener("click", () => {
     if (expandedTodos.has(todo.id)) {
       expandedTodos.delete(todo.id);
@@ -116,24 +119,68 @@ function createTodoElement(todo) {
 
   li.appendChild(header);
 
-  // expanded section
+  // =========================
+  // EXPANDED SECTION ONLY
+  // =========================
   if (isExpanded) {
+    // DESCRIPTION
     const desc = document.createElement("p");
     desc.textContent = todo.description;
     li.appendChild(desc);
+
+    // ACTIONS WRAPPER
+    const actions = document.createElement("div");
+    actions.style.display = "flex";
+    actions.style.gap = "8px";
+
+    // COMPLETE / UNDO
+    const completeBtn = document.createElement("button");
+    completeBtn.textContent = todo.completed ? "Undo" : "Complete";
+
+    completeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleTodo(todo.id);
+      renderApp();
+    });
+
+    // EDIT
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const newTitle = prompt("Title:", todo.title);
+      const newDesc = prompt("Description:", todo.description);
+      const newDate = prompt("Due date:", todo.dueDate);
+      const newPriority = prompt("Priority:", todo.priority);
+
+      if (!newTitle || !newDesc || !newDate || !newPriority) return;
+
+      todo.update({
+        title: newTitle,
+        description: newDesc,
+        dueDate: newDate,
+        priority: newPriority,
+      });
+
+      renderApp();
+    });
+
+    // DELETE
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "❌";
+
+    deleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteTodoFromCurrentProject(todo.id);
+      expandedTodos.delete(todo.id);
+      renderApp();
+    });
+
+    actions.append(completeBtn, editBtn, deleteBtn);
+    li.appendChild(actions);
   }
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "❌";
-
-  deleteBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    deleteTodoFromCurrentProject(todo.id);
-    expandedTodos.delete(todo.id); // cleanup
-    renderApp();
-  });
-
-  li.appendChild(deleteBtn);
 
   return li;
 }
